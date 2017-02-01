@@ -59,7 +59,6 @@ fs.open(filename, 'r', function(error, data) {
             // Include additional amount (float) field for Debit and Credit records
             if (record.type < 2) {
                 record.amount = buffer.slice(pos, pos+8).readFloatBE(0, 8);
-                //record.amount = buffer.slice(pos, pos+8);
                 pos = pos + 8;
             }
 
