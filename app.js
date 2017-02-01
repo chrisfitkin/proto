@@ -1,3 +1,13 @@
+/*
+
+What is the total amount in dollars of debits?
+What is the total amount in dollars of credits?
+How many autopays were started?
+How many autopays were ended?
+What is balance of user ID 2456938384156277127?
+
+*/
+
 
 var fs = require('fs');
 
@@ -21,8 +31,6 @@ readStream
   });
   */
 
-//var fs = require('fs');
-
 fs.open('txnlog.dat', 'r', function(error, data) {
     if (error) {
         console.log(error.message);
@@ -44,14 +52,19 @@ fs.open('txnlog.dat', 'r', function(error, data) {
 
         var pos = 9;
         for (let i=0; i<header.numberOfRecords; i++) {
+
+            console.log('attempt record at pos: ', pos);
             var record = {
                 _id: i,
+                pos: pos,
                 type: buffer.slice(pos, pos+1).readIntBE(0, 1),
                 timestamp: buffer.slice(pos+1, pos+5).readUInt32BE(),
                 userId: buffer.slice(pos+5, pos+13).readUIntBE(0, 8),
             };
+            console.log('record', record);
             pos = pos + 13;
             if (record.type < 2) {
+                console.log('attempt float at pos: ', pos);
                 record.amount = buffer.slice(pos, pos+8).readFloatBE(0, 8);
                 pos = pos + 8;
             }
