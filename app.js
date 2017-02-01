@@ -30,14 +30,19 @@ readStream
 
   });
   */
-
-fs.open('txnlog.dat', 'r', function(error, data) {
+var filename = 'txnlog.dat';
+var fileStats = fs.statSync(filename);
+fs.open(filename, 'r', function(error, data) {
     if (error) {
         console.log(error.message);
         return;
     }
-    var buffer = new Buffer(100);
-    fs.read(data, buffer, 0, 100, 0, function(err, num) {
+    console.log('data.length', data.length);
+    console.log('fileStats', fileStats);
+    //return;
+
+    let buffer = new Buffer(fileStats.size);
+    fs.read(data, buffer, 0, fileStats.size, 0, function(err, num) {
         // console.log(buffer.toString('utf8', 0, num));
         console.log(buffer);
 
@@ -61,11 +66,12 @@ fs.open('txnlog.dat', 'r', function(error, data) {
                 timestamp: buffer.slice(pos+1, pos+5).readUInt32BE(),
                 userId: buffer.slice(pos+5, pos+13).readUIntBE(0, 8),
             };
-            console.log('record', record);
+            record.date = new Date(record.timestamp*1000);
             pos = pos + 13;
             if (record.type < 2) {
                 console.log('attempt float at pos: ', pos);
                 record.amount = buffer.slice(pos, pos+8).readFloatBE(0, 8);
+                //record.amount = buffer.slice(pos, pos+8);
                 pos = pos + 8;
             }
             console.log('record', record);
