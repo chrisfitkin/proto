@@ -1,7 +1,10 @@
 /**
  * Parse a custom protocol format
  * https://github.com/adhocteam/homework/tree/master/proto
- * 
+ *
+ * # To run:
+ * node app.js
+ *  
  */
 
 
